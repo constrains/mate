@@ -16,7 +16,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh;
             flex-direction: column;
         }
 
@@ -31,7 +31,7 @@
         }
 
         .container {
-            width: 90%;
+            width: 100%;
             max-width: 800px;
             padding: 20px;
             background-color: white;
@@ -54,8 +54,8 @@
         }
 
         input {
-            padding: 12px;
-            font-size: 1em;
+            padding: 10px;
+            font-size: 1.2em;
             margin: 10px 0;
             border-radius: 8px;
             border: 2px solid #2196F3;
@@ -64,8 +64,8 @@
         }
 
         button {
-            padding: 12px 20px;
-            font-size: 1.1em;
+            padding: 15px 25px;
+            font-size: 1.2em;
             margin-top: 10px;
             background-color: #2196F3;
             color: white;
@@ -85,6 +85,7 @@
             transform: scale(1.05);
         }
 
+        /* Iconițele înaintea textului */
         button i {
             margin-right: 10px;
         }
@@ -104,6 +105,7 @@
             to { opacity: 1; }
         }
 
+        /* Animația pentru pașii de descompunere */
         .step {
             margin-left: 20px;
             opacity: 0;
@@ -111,11 +113,21 @@
             animation: fadeInSlide 0.5s forwards;
         }
 
-        .step:nth-child(1) { animation-delay: 0.2s; }
-        .step:nth-child(2) { animation-delay: 0.4s; }
-        .step:nth-child(3) { animation-delay: 0.6s; }
-        .step:nth-child(4) { animation-delay: 0.8s; }
+        /* Adăugăm o întârziere pentru fiecare linie */
+        .step:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+        .step:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+        .step:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+        .step:nth-child(4) {
+            animation-delay: 0.8s;
+        }
 
+        /* Keyframes pentru animația de slide */
         @keyframes fadeInSlide {
             from {
                 opacity: 0;
@@ -157,9 +169,6 @@
             .final-factors {
                 font-size: 1.2em;
             }
-            button {
-                padding: 10px 15px;
-            }
         }
     </style>
 </head>
@@ -181,8 +190,169 @@
         <div class="final-factors" id="gcd"></div>
         <div class="final-factors" id="lcm"></div>
     </div>
+
     <script>
-        // Scripts (No changes made here)
+        // Functie pentru calculul Cel Mai Mare Divizor Comun între 2 numere
+        function gcd(a, b) {
+            while (b !== 0) {
+                let temp = b;
+                b = a % b;
+                a = temp;
+            }
+            return a;
+        }
+
+        // Functie pentru descompunerea unui numar in factori primi
+        function primeFactors(num) {
+            let factors = [];
+            for (let i = 2; i <= num; i++) {
+                while (num % i === 0) {
+                    factors.push(i);
+                    num /= i;
+                }
+            }
+            return factors;
+        }
+
+        // Functie pentru calculul Cel Mai Mare Divizor Comun între mai multe numere
+        function calculateGCD() {
+            let allNumbers = document.getElementById("allNumbers").value;
+            allNumbers = allNumbers.includes(",") ? allNumbers.split(",") : allNumbers.split(" ");
+            let error = false;
+
+            // Verificare validitate numere
+            for (let index = 0; index < allNumbers.length; index++) {
+                const element = allNumbers[index].trim();
+                if (isNaN(element) || !Number.isInteger(Number(element)) || element === "") {
+                    error = true;
+                    break;
+                }
+            }
+
+            // Daca nu sunt erori
+            if (!error && allNumbers.length > 1) {
+                let numbers = allNumbers.map(num => parseInt(num.trim()));
+
+                // Afișează pașii pentru descompunerea fiecărui număr
+                let stepsHTML = '';
+                let primeFactorLists = [];
+                numbers.forEach(num => {
+                    let factors = primeFactors(num);
+                    let stepHTML = `Numărul ${num} este descompus astfel:\n`;
+
+                    // Pașii de descompunere
+                    let currentNum = num;
+                    factors.forEach(factor => {
+                        stepHTML += `
+                            <div class="step">${currentNum} | ${factor}</div>
+                        `;
+                        currentNum /= factor;
+                    });
+                    stepHTML += `
+                        <div class="step">1 | 0</div>
+                    `;
+                    stepsHTML += stepHTML + '<br><br>';
+
+                    // Salvează factori pentru fiecare număr
+                    primeFactorLists.push(factors);
+                });
+
+                // Afișează pașii de descompunere
+                document.getElementById("stepsContainer").innerHTML = stepsHTML;
+
+                // Calcul Cel Mai Mare Divizor Comun între mai multe numere
+                let gcdFinal = numbers[0];
+                numbers.slice(1).forEach(num => {
+                    gcdFinal = gcd(gcdFinal, num);
+                });
+
+                // Afișează rezultatul final pentru GCD
+                document.getElementById("gcd").innerHTML = `Cel mai mare divizor comun = ${gcdFinal}`;
+            } else {
+                // Erori în caz de input invalid
+                document.getElementById("gcd").innerHTML = "Te rog introdu numere valide, separate prin virgulă sau spațiu.";
+                document.getElementById("stepsContainer").innerHTML = "";
+            }
+        }
+
+        // Functie pentru calculul Cel Mai Mic Multiplu Comun între mai multe numere
+        function calculateLCM() {
+            let allNumbers = document.getElementById("allNumbers").value;
+            allNumbers = allNumbers.includes(",") ? allNumbers.split(",") : allNumbers.split(" ");
+            let error = false;
+
+            // Verificare validitate numere
+            for (let index = 0; index < allNumbers.length; index++) {
+                const element = allNumbers[index].trim();
+                if (isNaN(element) || !Number.isInteger(Number(element)) || element === "") {
+                    error = true;
+                    break;
+                }
+            }
+
+            // Daca nu sunt erori
+            if (!error && allNumbers.length > 1) {
+                let numbers = allNumbers.map(num => parseInt(num.trim()));
+
+                // Afișează pașii pentru descompunerea fiecărui număr
+                let stepsHTML = '';
+                let primeFactorLists = [];
+                numbers.forEach(num => {
+                    let factors = primeFactors(num);
+                    let stepHTML = `Numărul ${num} este descompus astfel:\n`;
+
+                    // Pașii de descompunere
+                    let currentNum = num;
+                    factors.forEach(factor => {
+                        stepHTML += `
+                            <div class="step">${currentNum} | ${factor}</div>
+                        `;
+                        currentNum /= factor;
+                    });
+                    stepHTML += `
+                        <div class="step">1 | 0</div>
+                    `;
+                    stepsHTML += stepHTML + '<br><br>';
+
+                    // Salvează factori pentru fiecare număr
+                    primeFactorLists.push(factors);
+                });
+
+                // Afișează pașii de descompunere
+                document.getElementById("stepsContainer").innerHTML = stepsHTML;
+
+                // Calcul Cel Mai Mic Multiplu Comun între mai multe numere
+                let lcmFactors = {};
+                let lcmFinal = 1;
+
+                // Determinăm factorii și luăm puterea maximă pentru fiecare factor
+                primeFactorLists.forEach(factors => {
+                    factors.forEach(factor => {
+                        let count = factors.filter(f => f === factor).length;
+                        if (!lcmFactors[factor] || count > lcmFactors[factor]) {
+                            lcmFactors[factor] = count;
+                        }
+                    });
+                });
+
+                // Generăm formula finală pentru Cel Mai Mic Multiplu Comun
+                let lcmString = '';
+                for (let factor in lcmFactors) {
+                    lcmString += `${factor}¹•`;
+                    lcmFinal *= Math.pow(factor, lcmFactors[factor]);
+                }
+
+                // Elimină ultima „•” din string
+                lcmString = lcmString.slice(0, -1);
+
+                // Afișează formula și rezultatul final
+                document.getElementById("lcm").innerHTML = `Cel mai mic multiplu comun = ${lcmFinal} (${lcmString})`;
+            } else {
+                // Erori în caz de input invalid
+                document.getElementById("lcm").innerHTML = "Te rog introdu numere valide, separate prin virgulă sau spațiu.";
+                document.getElementById("stepsContainer").innerHTML = "";
+            }
+        }
     </script>
 </body>
 </html>
