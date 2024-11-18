@@ -6,43 +6,46 @@
   <title>Visitor Logger</title>
 </head>
 <body>
-  <h2>Enter your name:</h2>
+  <h2>Visitor Form</h2>
   <form id="visitor-form">
-    <label for="name">Name: </label>
-    <input type="text" id="name" name="name" required>
-    <br><br>
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
     <button type="submit">Submit</button>
   </form>
 
   <script>
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbx1rtyXl9SZ-xTPptKlLmX1-Rk-FOt-1vDsmgxcShm2xhT_hp-FBbnwc4OKRB2T-6HZ/exec";
+    // URL of the Google Apps Script Web App
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbx1rtyXl9SZ-xTPptKlLmX1-Rk-FOt-1vDsmgxcShm2xhT_hp-FBbnwc4OKRB2T-6HZ/exec';
 
-    document.getElementById("visitor-form").addEventListener("submit", async (event) => {
+    // Handle form submission
+    document.getElementById('visitor-form').addEventListener('submit', function (event) {
       event.preventDefault();
 
-      const name = document.getElementById("name").value;
-      const ip = "127.0.0.1";  // Use a default or implement IP detection if needed
-      const location = "Unknown";  // Use a default or implement location detection if needed
-
-      // Make the POST request to the Google Apps Script web app
-      try {
-        const response = await fetch(scriptUrl, {
-          method: "POST",
-          body: new URLSearchParams({
-            name: name,
-            ip: ip,
-            location: location
-          }),
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          }
-        });
-
-        const responseText = await response.text();
-        alert(responseText);  // Display success or error message
-      } catch (error) {
-        alert("Failed to log visitor: " + error.message);
-      }
+      const name = document.getElementById('name').value;
+      const ip = 'Sample IP'; // You can get the visitor's IP here (it's a simplified approach)
+      const location = 'Sample Location'; // Same for location
+      
+      // Make the POST request to the Google Apps Script
+      fetch(scriptURL, {
+        method: 'POST',
+        body: new URLSearchParams({
+          name: name,
+          ip: ip,
+          location: location
+        }),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+      .then(response => response.text())
+      .then(result => {
+        alert('Visitor logged successfully!');
+        console.log(result);
+      })
+      .catch(error => {
+        alert('Failed to log visitor');
+        console.error(error);
+      });
     });
   </script>
 </body>
