@@ -185,8 +185,50 @@
             document.getElementById("calculatorContainer").style.display = "block";
         }
 
-        // Functions for GCD and LCM calculations remain unchanged
-        // Include the previous GCD and LCM calculation functions here
+        function calculateGCD() {
+            const numbers = document.getElementById("allNumbers").value.split(/[\s,]+/).map(Number);
+            if (numbers.length < 2) {
+                alert("Te rog introdu cel puțin două numere.");
+                return;
+            }
+
+            let gcd = numbers[0];
+            for (let i = 1; i < numbers.length; i++) {
+                gcd = findGCD(gcd, numbers[i]);
+            }
+
+            document.getElementById("stepsContainer").innerHTML = `Calculul GCD pentru numerele ${numbers.join(', ')} este:`;
+            document.getElementById("gcd").innerText = `GCD: ${gcd}`;
+        }
+
+        function calculateLCM() {
+            const numbers = document.getElementById("allNumbers").value.split(/[\s,]+/).map(Number);
+            if (numbers.length < 2) {
+                alert("Te rog introdu cel puțin două numere.");
+                return;
+            }
+
+            let lcm = numbers[0];
+            for (let i = 1; i < numbers.length; i++) {
+                lcm = findLCM(lcm, numbers[i]);
+            }
+
+            document.getElementById("stepsContainer").innerHTML = `Calculul LCM pentru numerele ${numbers.join(', ')} este:`;
+            document.getElementById("lcm").innerText = `LCM: ${lcm}`;
+        }
+
+        function findGCD(a, b) {
+            while (b !== 0) {
+                let temp = b;
+                b = a % b;
+                a = temp;
+            }
+            return a;
+        }
+
+        function findLCM(a, b) {
+            return (a * b) / findGCD(a, b);
+        }
     </script>
 </body>
 </html>
