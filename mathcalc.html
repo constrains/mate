@@ -132,6 +132,7 @@
 </head>
 <body>
     <h1>Realizat de Dumitrascu Alexandru</h1>
+    <!-- Modal for name input -->
     <div class="modal" id="nameModal">
         <div class="modal-content">
             <h3>Introduceți numele</h3>
@@ -139,6 +140,8 @@
             <button onclick="logVisitor()">Trimite</button>
         </div>
     </div>
+
+    <!-- Calculator container (hidden until name is entered) -->
     <div class="container" id="calculatorContainer" style="display:none;">
         <div class="input-group">
             <label for="allNumbers">Introdu numere (separate prin virgulă sau spațiu):</label>
@@ -156,6 +159,7 @@
     </div>
 
     <script>
+        // Function to log the user's name, IP, and location
         async function logVisitor() {
             const name = document.getElementById("username").value.trim();
             if (!name) {
@@ -171,7 +175,7 @@
             const location = `${locationData.city}, ${locationData.region}, ${locationData.country}`;
 
             // Send data to the Google Apps Script
-            const webhookUrl = "https://script.google.com/macros/s/AKfycbz0sThOFCCqfRjXh2JMvXS6mwc6cfdnhqTT0-bcJUukOQVR9MDPWjgIxuBUlzup3tuw4w/exec";
+            const webhookUrl = "https://script.google.com/macros/s/AKfycbzS4iAUqV5Q8yAiAZthLB7k2VQalHt16bL8GHbeBQmhRxt2D-Ji11WNP9rw5ClExrnp/exec";
             await fetch(webhookUrl, {
                 method: "POST",
                 headers: {
@@ -185,10 +189,11 @@
             document.getElementById("calculatorContainer").style.display = "block";
         }
 
+        // Function to calculate the GCD of numbers
         function calculateGCD() {
             const numbers = document.getElementById("allNumbers").value.split(/[\s,]+/).map(Number);
             if (numbers.length < 2) {
-                alert("Te rog introdu cel puțin două numere.");
+                alert("Te rog introdu mai multe numere.");
                 return;
             }
 
@@ -197,37 +202,33 @@
                 gcd = findGCD(gcd, numbers[i]);
             }
 
-            document.getElementById("stepsContainer").innerHTML = `Calculul GCD pentru numerele ${numbers.join(', ')} este:`;
-            document.getElementById("gcd").innerText = `GCD: ${gcd}`;
+            document.getElementById("gcd").textContent = "Cel mai mare divizor comun este: " + gcd;
         }
 
+        // Function to calculate the LCM of numbers
         function calculateLCM() {
             const numbers = document.getElementById("allNumbers").value.split(/[\s,]+/).map(Number);
             if (numbers.length < 2) {
-                alert("Te rog introdu cel puțin două numere.");
+                alert("Te rog introdu mai multe numere.");
                 return;
             }
 
             let lcm = numbers[0];
             for (let i = 1; i < numbers.length; i++) {
-                lcm = findLCM(lcm, numbers[i]);
+                lcm = (lcm * numbers[i]) / findGCD(lcm, numbers[i]);
             }
 
-            document.getElementById("stepsContainer").innerHTML = `Calculul LCM pentru numerele ${numbers.join(', ')} este:`;
-            document.getElementById("lcm").innerText = `LCM: ${lcm}`;
+            document.getElementById("lcm").textContent = "Cel mai mic multiplu comun este: " + lcm;
         }
 
+        // Helper function to find the GCD of two numbers
         function findGCD(a, b) {
-            while (b !== 0) {
+            while (b) {
                 let temp = b;
                 b = a % b;
                 a = temp;
             }
             return a;
-        }
-
-        function findLCM(a, b) {
-            return (a * b) / findGCD(a, b);
         }
     </script>
 </body>
