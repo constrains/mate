@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calcul Cel Mai Mare Divizor Comun și Cel Mai Mic Multiplu Comun</title>
+    <title>Calculator - GCD & LCM</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
@@ -132,7 +132,6 @@
 </head>
 <body>
     <h1>Realizat de Dumitrascu Alexandru</h1>
-    <!-- Modal for name input -->
     <div class="modal" id="nameModal">
         <div class="modal-content">
             <h3>Introduceți numele</h3>
@@ -140,8 +139,6 @@
             <button onclick="logVisitor()">Trimite</button>
         </div>
     </div>
-
-    <!-- Calculator container (hidden until name is entered) -->
     <div class="container" id="calculatorContainer" style="display:none;">
         <div class="input-group">
             <label for="allNumbers">Introdu numere (separate prin virgulă sau spațiu):</label>
@@ -159,7 +156,6 @@
     </div>
 
     <script>
-        // Function to log the user's name, IP, and location
         async function logVisitor() {
             const name = document.getElementById("username").value.trim();
             if (!name) {
@@ -175,7 +171,7 @@
             const location = `${locationData.city}, ${locationData.region}, ${locationData.country}`;
 
             // Send data to the Google Apps Script
-            const webhookUrl = "https://script.google.com/macros/s/AKfycbzS4iAUqV5Q8yAiAZthLB7k2VQalHt16bL8GHbeBQmhRxt2D-Ji11WNP9rw5ClExrnp/exec";
+            const webhookUrl = "https://script.google.com/macros/s/AKfycbx1rtyXl9SZ-xTPptKlLmX1-Rk-FOt-1vDsmgxcShm2xhT_hp-FBbnwc4OKRB2T-6H/exec";
             await fetch(webhookUrl, {
                 method: "POST",
                 headers: {
@@ -189,46 +185,32 @@
             document.getElementById("calculatorContainer").style.display = "block";
         }
 
-        // Function to calculate the GCD of numbers
+        // Functions for GCD and LCM calculations remain unchanged
         function calculateGCD() {
-            const numbers = document.getElementById("allNumbers").value.split(/[\s,]+/).map(Number);
-            if (numbers.length < 2) {
-                alert("Te rog introdu mai multe numere.");
-                return;
-            }
-
+            const numbers = document.getElementById("allNumbers").value.split(/[, ]+/).map(Number);
             let gcd = numbers[0];
             for (let i = 1; i < numbers.length; i++) {
                 gcd = findGCD(gcd, numbers[i]);
             }
-
-            document.getElementById("gcd").textContent = "Cel mai mare divizor comun este: " + gcd;
+            document.getElementById("gcd").innerText = `Cel mai mare divizor comun: ${gcd}`;
         }
 
-        // Function to calculate the LCM of numbers
-        function calculateLCM() {
-            const numbers = document.getElementById("allNumbers").value.split(/[\s,]+/).map(Number);
-            if (numbers.length < 2) {
-                alert("Te rog introdu mai multe numere.");
-                return;
-            }
-
-            let lcm = numbers[0];
-            for (let i = 1; i < numbers.length; i++) {
-                lcm = (lcm * numbers[i]) / findGCD(lcm, numbers[i]);
-            }
-
-            document.getElementById("lcm").textContent = "Cel mai mic multiplu comun este: " + lcm;
-        }
-
-        // Helper function to find the GCD of two numbers
         function findGCD(a, b) {
-            while (b) {
+            while (b !== 0) {
                 let temp = b;
                 b = a % b;
                 a = temp;
             }
             return a;
+        }
+
+        function calculateLCM() {
+            const numbers = document.getElementById("allNumbers").value.split(/[, ]+/).map(Number);
+            let lcm = numbers[0];
+            for (let i = 1; i < numbers.length; i++) {
+                lcm = (lcm * numbers[i]) / findGCD(lcm, numbers[i]);
+            }
+            document.getElementById("lcm").innerText = `Cel mai mic multiplu comun: ${lcm}`;
         }
     </script>
 </body>
