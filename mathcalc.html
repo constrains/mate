@@ -1,217 +1,49 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculator - GCD & LCM</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f3f4f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-        }
-
-        h1 {
-            text-align: center;
-            background-color: #2196F3;
-            color: white;
-            padding: 20px;
-            margin: 0;
-            width: 100%;
-            font-size: 1.8em;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 800px;
-            padding: 20px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
-
-        label {
-            font-size: 1.2em;
-            margin: 10px 0;
-            color: #2196F3;
-        }
-
-        input {
-            padding: 10px;
-            font-size: 1.2em;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: 2px solid #2196F3;
-            width: 100%;
-            max-width: 400px;
-        }
-
-        button {
-            padding: 15px 25px;
-            font-size: 1.2em;
-            margin-top: 10px;
-            background-color: #2196F3;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            max-width: 400px;
-            transition: background-color 0.3s, transform 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        button:hover {
-            background-color: #1976D2;
-            transform: scale(1.05);
-        }
-
-        button i {
-            margin-right: 10px;
-        }
-
-        .result {
-            margin-top: 20px;
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #2196F3;
-            text-align: center;
-        }
-
-        .modal {
-            display: flex;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .modal input {
-            margin: 10px 0;
-            padding: 10px;
-            width: 100%;
-        }
-
-        .modal button {
-            padding: 10px;
-            background-color: blue;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visitor Logger</title>
 </head>
 <body>
-    <h1>Realizat de Dumitrascu Alexandru</h1>
-    <div class="modal" id="nameModal">
-        <div class="modal-content">
-            <h3>Introduceți numele</h3>
-            <input type="text" id="username" placeholder="Ex: Alexandru Dumitrașcu">
-            <button onclick="logVisitor()">Trimite</button>
-        </div>
-    </div>
-    <div class="container" id="calculatorContainer" style="display:none;">
-        <div class="input-group">
-            <label for="allNumbers">Introdu numere (separate prin virgulă sau spațiu):</label>
-            <input type="text" id="allNumbers" placeholder="Ex: 24, 18, 20" />
-            <button onclick="calculateGCD()">
-                <i class="fas fa-cogs"></i> Calculare Cel mai mare divizor comun
-            </button>
-            <button onclick="calculateLCM()">
-                <i class="fas fa-cogs"></i> Calculare Cel mai mic multiplu comun
-            </button>
-        </div>
-        <div class="result" id="stepsContainer"></div>
-        <div class="result" id="gcd"></div>
-        <div class="result" id="lcm"></div>
-    </div>
+  <h2>Enter your name:</h2>
+  <form id="visitor-form">
+    <label for="name">Name: </label>
+    <input type="text" id="name" name="name" required>
+    <br><br>
+    <button type="submit">Submit</button>
+  </form>
 
-    <script>
-        async function logVisitor() {
-            const name = document.getElementById("username").value.trim();
-            if (!name) {
-                alert("Te rog introdu un nume!");
-                return;
-            }
+  <script>
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbx1rtyXl9SZ-xTPptKlLmX1-Rk-FOt-1vDsmgxcShm2xhT_hp-FBbnwc4OKRB2T-6HZ/exec";
 
-            // Fetch user IP and location using IPinfo
-            const locationResponse = await fetch("https://ipinfo.io/json?token=36a5c31c4af391");
-            const locationData = await locationResponse.json();
+    document.getElementById("visitor-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
 
-            const ip = locationData.ip;
-            const location = `${locationData.city}, ${locationData.region}, ${locationData.country}`;
+      const name = document.getElementById("name").value;
+      const ip = "127.0.0.1";  // Use a default or implement IP detection if needed
+      const location = "Unknown";  // Use a default or implement location detection if needed
 
-            // Send data to the Google Apps Script
-            const webhookUrl = "https://script.google.com/macros/s/AKfycbx1rtyXl9SZ-xTPptKlLmX1-Rk-FOt-1vDsmgxcShm2xhT_hp-FBbnwc4OKRB2T-6H/exec";
-            await fetch(webhookUrl, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ name, ip, location }),
-            });
+      // Make the POST request to the Google Apps Script web app
+      try {
+        const response = await fetch(scriptUrl, {
+          method: "POST",
+          body: new URLSearchParams({
+            name: name,
+            ip: ip,
+            location: location
+          }),
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        });
 
-            alert("Informațiile tale au fost trimise!");
-            document.getElementById("nameModal").style.display = "none";
-            document.getElementById("calculatorContainer").style.display = "block";
-        }
-
-        // Functions for GCD and LCM calculations remain unchanged
-        function calculateGCD() {
-            const numbers = document.getElementById("allNumbers").value.split(/[, ]+/).map(Number);
-            let gcd = numbers[0];
-            for (let i = 1; i < numbers.length; i++) {
-                gcd = findGCD(gcd, numbers[i]);
-            }
-            document.getElementById("gcd").innerText = `Cel mai mare divizor comun: ${gcd}`;
-        }
-
-        function findGCD(a, b) {
-            while (b !== 0) {
-                let temp = b;
-                b = a % b;
-                a = temp;
-            }
-            return a;
-        }
-
-        function calculateLCM() {
-            const numbers = document.getElementById("allNumbers").value.split(/[, ]+/).map(Number);
-            let lcm = numbers[0];
-            for (let i = 1; i < numbers.length; i++) {
-                lcm = (lcm * numbers[i]) / findGCD(lcm, numbers[i]);
-            }
-            document.getElementById("lcm").innerText = `Cel mai mic multiplu comun: ${lcm}`;
-        }
-    </script>
+        const responseText = await response.text();
+        alert(responseText);  // Display success or error message
+      } catch (error) {
+        alert("Failed to log visitor: " + error.message);
+      }
+    });
+  </script>
 </body>
 </html>
